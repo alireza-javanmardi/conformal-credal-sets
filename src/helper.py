@@ -1,5 +1,21 @@
 import numpy as np
 
+def simplex_discretizer(step=0.001):
+    vectors = []
+    for x in np.arange(0, 1 + step, step):
+        for y in np.arange(0, 1 + step, step):
+            for z in np.arange(0, 1 + step, step):
+                if x + y + z == 1:  # Ensure the sum is one
+                    vectors.append([x, y, z])
+    return np.array(vectors)
+
+
+def prob_rounder(probs, decimals=3):
+    a = probs.copy()*0
+    a[:, 1:] = np.round(probs[:,1:], decimals)
+    a[:,0] = 1 - np.sum(a[:,1:], axis=1)
+    return a
+
 def runif_in_simplex(n):
   ''' Return uniformly random vector in the n-simplex '''
 
