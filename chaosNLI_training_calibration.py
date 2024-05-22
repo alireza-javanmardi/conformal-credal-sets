@@ -56,19 +56,24 @@ if predictor_order == "first":
         calib_scores["kl"].append(entropy(lambda_calib[i], lambda_hat_calib[i], base=2))
         calib_scores["ws"].append(wasserstein_distance([0,1,2], [0,1,2], lambda_hat_calib[i], lambda_calib[i]))
         calib_scores["inner"].append(1-np.inner(lambda_hat_calib[i], lambda_calib[i]))
-    data_to_save = {"calib_score":calib_scores, "lambda_hat_test":lambda_hat_test, "lambda_test":lambda_test, "premise_test": premise_test, "hypothesis_test": hypothesis_test}
+    data_to_save = {"calib_score":calib_scores, "lambda_hat_calib":lambda_hat_calib, "lambda_hat_test":lambda_hat_test, "lambda_test":lambda_test, "premise_test": premise_test, "hypothesis_test": hypothesis_test}
 
 
 else:
     alpha_calib = model.predict(X_calib) + 1 
     alpha_test = model.predict(X_test) + 1
+    mode_calib = (alpha_calib-1)/np.sum(alpha_calib-1, axis=1)[:,None]
+    mode_test = (alpha_test-1)/np.sum(alpha_test-1, axis=1)[:,None]
     dist_lambda_hat_calib = tfd.Dirichlet(alpha_calib)
     calib_scores = []
     for k in range(X_calib.shape[0]):
-        probs = (dist_lambda_hat_calib[k].prob(simplex)).numpy()
+        # probs = (dist_lambda_hat_calib[k].prob(simplex)).numpy()
+        # p = dist_lambda_hat_calib[k].prob(lambda_calib[k]).numpy()
+        # calib_scores.append(1-p/(np.max(probs)))
+        mode_p = dist_lambda_hat_calib[k].prob(mode_calib[k]).numpy()
         p = dist_lambda_hat_calib[k].prob(lambda_calib[k]).numpy()
-        calib_scores.append(1-p/(np.max(probs)))
-    data_to_save = {"calib_score":calib_scores, "alpha_test":alpha_test, "lambda_test":lambda_test, "premise_test": premise_test, "hypothesis_test": hypothesis_test}
+        calib_scores.append(1-p/mode_p)
+    data_to_save = {"calib_score":calib_scores, "alpha_test":alpha_test, "lambda_test":lambda_test, "mode_test": mode_test, "premise_test": premise_test, "hypothesis_test": hypothesis_test}
 
 
 os.makedirs(os.path.join("results", "chaosNLI", exp_seed_str), exist_ok=True)      

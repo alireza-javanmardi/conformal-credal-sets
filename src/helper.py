@@ -65,3 +65,35 @@ def compute_quantile(scores, alpha):
     n = len(scores)
 
     return np.quantile(scores, np.ceil((n+1)*(1-alpha))/n, method="inverted_cdf")
+
+def prob_projector(p, axis): 
+    """distribute the probability mass of given axis equally between the other two 
+
+    Args:
+        p (array): the input 3-d categorical probability distribution
+        axis (int): 0, 1, or 2. 
+
+    Returns:
+        array: the resulting distribution
+    """
+    new_p = p.copy()
+    for i in range(len(p)): 
+        new_p[i] = new_p[i] + p[axis]/2
+    new_p[axis] = 0
+    return new_p 
+
+def tu_au_eu(entropies):
+    """calculate TU, AU, and EU for a given vector of entropies (of a credal set distributions)
+
+    Args:
+        entropies (array): entropies (of a credal set distributions)
+
+    Returns:
+        TU, AU, and EU
+    """
+    
+    tu = np.max(entropies)
+    au = np.min(entropies)
+    eu = tu - au 
+
+    return tu, au, eu 

@@ -25,7 +25,7 @@ with open(os.path.join("results", "chaosNLI", exp_seed_str, "second_order_data.p
 calib_scores = fo_data["calib_score"]
 calib_scores["so"] = so_data["calib_score"]
 
-lambda_hat_test, lambda_test, alpha_test= fo_data["lambda_hat_test"] , fo_data["lambda_test"], so_data["alpha_test"]
+lambda_hat_test, lambda_test, alpha_test, mode_test= fo_data["lambda_hat_test"] , fo_data["lambda_test"], so_data["alpha_test"], so_data["mode_test"]
 dist_pred_test = tfd.Dirichlet(alpha_test)
 
 q = {}
@@ -41,9 +41,12 @@ for i in range(lambda_hat_test.shape[0]):
     cvg["ws"] += (wasserstein_distance([0,1,2], [0,1,2], lambda_hat_test[i], lambda_test[i]) <q["ws"])
     cvg["inner"] += ((1-np.inner(lambda_hat_test[i], lambda_test[i])) <q["inner"])
 
-    probs = (dist_pred_test[i].prob(simplex)).numpy()
+    # probs = (dist_pred_test[i].prob(simplex)).numpy()
+    # p = dist_pred_test[i].prob(lambda_test[i]).numpy()
+    # cvg["so"] += p/(np.max(probs)) >= (1-q["so"])
+    mode_p = dist_pred_test[i].prob(mode_test[i]).numpy()
     p = dist_pred_test[i].prob(lambda_test[i]).numpy()
-    cvg["so"] += p/(np.max(probs)) >= (1-q["so"])
+    cvg["so"] += p/(mode_p) >= (1-q["so"])
 
 for d in calib_scores.keys():
     cvg[d] = cvg[d]/lambda_hat_test.shape[0]
@@ -67,8 +70,11 @@ for k in range(lambda_hat_test.shape[0]):
     idx_set_test["inner"].append(idx_inner)
     set_size_test["inner"].append(len(idx_inner))
 
+    # probs = (dist_pred_test[k].prob(simplex)).numpy()
+    # ix_so = np.where(probs/np.max(probs) >= (1-q["so"]))[0]
     probs = (dist_pred_test[k].prob(simplex)).numpy()
-    ix_so = np.where(probs/np.max(probs) >= (1-q["so"]))[0]
+    mode_p = dist_pred_test[k].prob(mode_test[k]).numpy()
+    ix_so = np.where(probs/mode_p >= (1-q["so"]))[0]
     idx_set_test["so"].append(ix_so)
     set_size_test["so"].append(len(ix_so))
 
