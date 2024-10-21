@@ -1,10 +1,11 @@
 # Conformalized Credal Set Predictors
+This repo has the code for the paper [Conformalized Credal Set Predictors](https://neurips.cc/virtual/2024/poster/93218) written by Alireza Javanmardi, David Stutz, and Eyke Hüllermeier. This paper appears in the thirty-eighth annual conference on Neural Information Processing Systems (NeurIPS 2024).
 
-This repository contains the code implementation for our paper titled "Conformalized Credal Set Predictors".
+The uncertainty of a learner in classification can be effectively represented by a credal set, which is a set of probability distributions over classes. For a given input instance, a credal set not only captures the uncertainty about the true label (i.e., aleatoric uncertainty) but also reflects the uncertainty of the learner regarding the probability distribution over labels (i.e., epistemic uncertainty).
 
-## Abstract
+This paper demonstrates how to construct such credal sets using conformal prediction when each data instance is associated with a probability distribution over labels rather than a single crisp label.
 
-Credal sets represent collections of probability distributions that serve as potential candidates for imprecisely known ground-truth distributions. In the realm of machine learning, they have garnered attention as a compelling formalism for uncertainty representation, primarily for their capability to encompass both aleatoric and epistemic uncertainty within predictions. Nevertheless, devising methods for learning credal set predictors remains a formidable challenge. In our paper, we harness conformal prediction techniques to address this challenge. Specifically, we propose a novel approach for predicting credal sets within the classification task, leveraging training data annotated by probability distributions. Our method inherits the coverage guarantees inherent to conformal prediction, ensuring that our conformal credal sets are valid with high probability, without imposing constraints on the model or the underlying distribution. We illustrate the effectiveness of our approach in the context of natural language inference, a domain characterized by high ambiguity, often requiring multiple annotations per example.
+![image](alg.png)
 
 ## Setup
 
@@ -28,3 +29,14 @@ Subsequently, execute the script for chaosNLI testing with seed 2 and alpha valu
 python chaos_NLI_test.py 2 0.2
 ```
 Ensure you replace ENV_NAME with the name you prefer for your environment. Adjust the commands according to your specific requirements.
+
+## Citation
+If you use this code, please cite the paper
+```
+@inproceedings{javanmardi2024credal,
+ author = {Javanmardi, Alireza and Stutz, David and H\"{u}llermeier, Eyke},
+ booktitle = {Advances in Neural Information Processing Systems},
+ title = {Conformalized Credal Set Predictors},
+ year = {2024}
+}
+```
