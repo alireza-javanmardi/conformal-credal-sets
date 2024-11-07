@@ -33,10 +33,10 @@ Ensure you replace ENV_NAME with the name you prefer for your environment. Adjus
 ## Citation
 If you use this code, please cite the paper
 ```
-@inproceedings{javanmardi2024credal,
- author = {Javanmardi, Alireza and Stutz, David and H\"{u}llermeier, Eyke},
- booktitle = {Advances in Neural Information Processing Systems},
- title = {Conformalized Credal Set Predictors},
- year = {2024}
+@inproceedings{javanmardi2024conformalized,
+title={Conformalized Credal Set Predictors},
+author={Alireza Javanmardi and David Stutz and Eyke H{\"u}llermeier},
+booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
+year={2024}
 }
 ```
